@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Groupes de formation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="nav-bar">
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Accueil</a></li>
+        <li><a href="formations.html">📚 Formations</a></li>
+        <li><a href="salaries.html">👥 Salariés</a></li>
+        <li><a href="plan-formation.html">🗓️ Plan</a></li>
+        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
+        <li><a href="convocation.html">✉️ Convocation</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="formulaire-section">
+    <h1>👨‍👩‍👧‍👦 Composer un groupe</h1>
+    <form class="formulaire" id="groupeForm" onsubmit="enregistrerGroupe(event)">
+      <label>Nom du groupe</label>
+      <input type="text" id="nomGroupe" required>
+
+      <label>Formation concernée</label>
+      <select id="selectFormation" required></select>
+
+      <label>Date de la session</label>
+      <input type="date" id="dateSession" required>
+
+      <label>Formateur</label>
+      <input type="text" id="formateur" required>
+
+      <label>Salariés à inclure</label>
+      <div id="listeSalaries" class="multi-select"></div>
+
+      <button type="submit">✅ Créer le groupe</button>
+    </form>
+
+    <div id="confirmation" style="margin-top: 1rem;"></div>
+  </section>
+
+  <script>
+    const formations = ["Excel avancé", "Communication orale", "Sécurité informatique"];
+    const salaries = ["Jean Dupont", "Amina Kouassi", "Maxime Leclerc", "Sophie Martin", "Ali Benkacem"];
+
+    // Remplit la liste déroulante et les cases à cocher
+    window.onload = function () {
+      const formationSelect = document.getElementById("selectFormation");
+      formations.forEach(f => {
+        const opt = document.createElement("option");
+        opt.value = f;
+        opt.textContent = f;
+        formationSelect.appendChild(opt);
+      });
+
+      const liste = document.getElementById("listeSalaries");
+      salaries.forEach(s => {
+        const div = document.createElement("div");
+        div.innerHTML = `<label><input type="checkbox" value="${s}"> ${s}</label>`;
+        liste.appendChild(div);
+      });
+    };
+
+    function enregistrerGroupe(e) {
+      e.preventDefault();
+      const nom = document.getElementById("nomGroupe").value;
+      const formation = document.getElementById("selectFormation").value;
+      const date = document.getElementById("dateSession").value;
+      const formateur = document.getElementById("formateur").value;
+      const checked = document.querySelectorAll("#listeSalaries input:checked");
+      const membres = Array.from(checked).map(c => c.value);
+
+      if (membres.length === 0) {
+        alert("Sélectionne au moins un salarié.");
+        return;
+      }
+
+      // Simulation d'enregistrement
+      const groupe = {
+        nom, formation, date, formateur, membres
+      };
+
+      // Affichage dans une div
+      document.getElementById("confirmation").innerHTML = `
+        <div style="background:#e0f7fa; padding:1rem; border-radius:6px;">
+          ✅ Groupe <strong>${nom}</strong> créé avec <strong>${membres.length}</strong> salarié(s) :
+          <ul>${membres.map(m => `<li>${m}</li>`).join('')}</ul>
+        </div>
+      `;
+
+      document.getElementById("groupeForm").reset();
+    }
+  </script>
+
+</body>
+</html>

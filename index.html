@@ -3,32 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mon Portfolio</title>
+  <title>Accueil – Cyndie</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Bienvenue sur mon portfolio</h1>
-    <p>Voici mes projets et compétences</p>
+    <nav>
+      <ul class="menu">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="projets.html">Mes projets</a></li>
+      </ul>
+    </nav>
+    <div class="reseaux">
+      <a href="https://www.linkedin.com/in/cyndie-ledeist-1556b8195/" target="_blank">
+        <img src="linkedin-icon.png" alt="LinkedIn" />
+      </a>
+      <a href="https://my.assessfirst.com/public/profile/mn7zvmqh-cyndie-ledeist?lang=fr-FR" target="_blank">
+        <img src="acessfirst-logo.png" alt="AcessFirst" />
+      </a>
+    </div>
   </header>
 
-  <main>
-    <section>
-      <h2>À propos de moi</h2>
-      <p>Développeur·se web passionné·e, en quête de nouvelles aventures numériques.</p>
-    </section>
+  <main class="accueil">
+    <div class="texte-gauche">
+      <h1>Pourquoi je souhaite devenir développeuse web</h1>
+      <p>
+        Après plusieurs années d’expérience en tant qu’assistante RH spécialisée en paie,  
+        j’ai développé de nombreux outils Excel pour automatiser les processus et faciliter le quotidien de mes missions RH / Paie.  
+        <br /><br />
+        Ces projets m’ont révélé à quel point j’aimais concevoir des solutions concrètes, logiques et efficaces.  
+        Mais ils m’ont aussi permis de m'apercevoir des limites d’Excel… et d’imaginer tout ce que je pourrais faire si je savais coder.  
+        <br /><br />
+        C’est ce déclic qui m’a poussée à me former au développement web : un domaine technique, stimulant et profondément créatif, dans lequel je souhaite aujourd’hui m’investir pleinement.
+      </p>
 
-    <section>
-      <h2>Projets</h2>
-      <ul>
-        <li>Projet 1 : Site vitrine</li>
-        <li>Projet 2 : Application météo</li>
-      </ul>
-    </section>
+      <div class="doigts-cv">
+        <img src="main-gauche.png" alt="Main gauche" class="main-gauche" />
+        <div class="boutons-cv">
+          <a href="cv-cyndie-ledeist.pdf" download class="btn-cv">📄 CV</a>
+          <a href="programme-formation.pdf" download class="btn-cv">📘 Formation</a>
+        </div>
+        <img src="main-droite.png" alt="Main droite" class="main-droite" />
+      </div>
+
+    </div>
+
+    <div class="photo-droite">
+      <img src="photo.jpg" alt="Ma photo" class="photo-profil-interactive" />
+    </div>
   </main>
 
   <footer>
-    <p>© 2025 - Mon Nom</p>
+    <p>© 2025 - Cyndie Ledeist</p>
   </footer>
 </body>
 </html>

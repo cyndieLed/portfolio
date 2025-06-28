@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Convocation à une formation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="nav-bar">
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Accueil</a></li>
+        <li><a href="formations.html">📚 Formations</a></li>
+        <li><a href="salaries.html">👥 Salariés</a></li>
+        <li><a href="plan-formation.html">🗓️ Plan</a></li>
+        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
+        <li><a href="convocation.html">✉️ Convocation</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="formulaire-section">
+    <h1>✉️ Générer une lettre de convocation</h1>
+
+    <form class="formulaire" id="formConvocation" onsubmit="genererLettre(event)">
+      <label>Nom du salarié</label>
+      <input type="text" id="nom" required>
+
+      <label>Formation</label>
+      <input type="text" id="formation" required>
+
+      <label>Lieu</label>
+      <input type="text" id="lieu" required>
+
+      <label>Date</label>
+      <input type="date" id="date" required>
+
+      <label>Heure</label>
+      <input type="time" id="heure" required>
+
+      <label>Durée</label>
+      <input type="text" id="duree" placeholder="Ex : 1 journée" required>
+
+      <button type="submit">📄 Générer la lettre</button>
+    </form>
+
+    <div id="resultat" class="lettre-convocation" style="display:none; margin-top:2rem;"></div>
+  </section>
+
+  <script>
+    function genererLettre(e) {
+      e.preventDefault();
+      const nom = document.getElementById('nom').value;
+      const formation = document.getElementById('formation').value;
+      const lieu = document.getElementById('lieu').value;
+      const date = new Date(document.getElementById('date').value).toLocaleDateString('fr-FR');
+      const heure = document.getElementById('heure').value;
+      const duree = document.getElementById('duree').value;
+
+      const contenu = `
+        <p style="text-align:right;">À ${lieu}, le ${new Date().toLocaleDateString('fr-FR')}</p>
+        <p><strong>Objet :</strong> Convocation à une session de formation</p>
+        <p>Madame, Monsieur ${nom},</p>
+
+        <p>Nous avons le plaisir de vous convier à la formation suivante :</p>
+
+        <ul>
+          <li><strong>Intitulé :</strong> ${formation}</li>
+          <li><strong>Date :</strong> ${date}</li>
+          <li><strong>Heure :</strong> ${heure}</li>
+          <li><strong>Lieu :</strong> ${lieu}</li>
+          <li><strong>Durée :</strong> ${duree}</li>
+        </ul>
+
+        <p>Votre présence est obligatoire. Merci de vous présenter à l’accueil 15 minutes avant le début de la session.</p>
+
+        <p>Nous restons à votre disposition pour toute question complémentaire.</p>
+
+        <p>Bien cordialement,</p>
+
+        <p><strong>Service Ressources Humaines</strong></p>
+      `;
+
+      const zone = document.getElementById('resultat');
+      zone.innerHTML = contenu;
+      zone.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
+
+<script>
+window.onload = function () {
+  const data = JSON.parse(localStorage.getItem("formationActuelle") || "{}");
+  if (data.nom)      document.getElementById("formation").value = data.nom;
+  if (data.date)     document.getElementById("date").value = data.date;
+  if (data.heure)    document.getElementById("heure").value = data.heure;
+  if (data.lieu)     document.getElementById("lieu").value = data.lieu;
+  if (data.formateur)document.getElementById("formateur").value = data.formateur;
+};
+</script>

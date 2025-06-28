@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Salariés</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="nav-bar">
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Accueil</a></li>
+        <li><a href="formations.html">📚 Formations</a></li>
+        <li><a href="salaries.html">👥 Salariés</a></li>
+        <li><a href="plan-formation.html">🗓️ Plan</a></li>
+        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
+        <li><a href="convocation.html">✉️ Convocation</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="formulaire-section">
+    <h1>👥 Importer la liste des salariés</h1>
+    <input type="file" id="csvFile" accept=".csv" />
+    <button onclick="importerCSV()">📥 Importer</button>
+    <ul id="liste-salaries" class="liste-salaries"></ul>
+  </section>
+
+  <script>
+    function importerCSV() {
+      const fichier = document.getElementById('csvFile').files[0];
+      if (!fichier) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lignes = e.target.result.split('\n');
+        const liste = document.getElementById('liste-salaries');
+        liste.innerHTML = '';
+        lignes.forEach(ligne => {
+          if (ligne.trim()) {
+            const li = document.createElement('li');
+            li.textContent = ligne;
+            liste.appendChild(li);
+          }
+        });
+      };
+      reader.readAsText(fichier);
+    }
+  </script>
+
+</body>
+</html>

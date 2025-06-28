@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formations</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="nav-bar">
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Accueil</a></li>
+        <li><a href="formations.html">📚 Formations</a></li>
+        <li><a href="salaries.html">👥 Salariés</a></li>
+        <li><a href="plan-formation.html">🗓️ Plan</a></li>
+        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
+        <li><a href="convocation.html">✉️ Convocation</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="formulaire-section">
+    <h1>📚 Ajouter une formation</h1>
+    <form class="formulaire">
+      <label>Titre</label>
+      <input type="text" required>
+
+      <label>Formateur</label>
+      <input type="text" required>
+
+      <label>Durée</label>
+      <input type="text">
+
+      <label>Date</label>
+      <input type="date">
+
+      <label>Description</label>
+      <textarea rows="4"></textarea>
+
+      <button type="submit">✅ Ajouter</button>
+    </form>
+  </section>
+
+</body>
+</html>
+
+<section class="formulaire-section">
+  <h1>📚 Ajouter une formation</h1>
+  <form class="formulaire" onsubmit="return false">
+
+    <label>Titre</label>
+    <input type="text" required>
+
+    <label>Formateur</label>
+    <input type="text" required>
+
+    <label>Durée</label>
+    <input type="text" placeholder="Ex : 2 jours" required>
+
+    <label>Date</label>
+    <input type="date" required>
+
+    <label>Description</label>
+    <textarea rows="4"></textarea>
+
+    <label>Programme de formation (PDF)</label>
+    <input type="file" accept="application/pdf" id="programmePDF">
+
+    <button type="submit">✅ Ajouter</button>
+  </form>
+</section>
