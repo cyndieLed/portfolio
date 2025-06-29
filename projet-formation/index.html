@@ -4,6 +4,70 @@
   <meta charset="UTF-8" />
   <title>Tableau de bord RH</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: #f4f6fa;
+      color: #222;
+    }
+
+    .nav-bar {
+      background-color: #003f6b;
+      padding: 15px 30px;
+    }
+
+    .nav-bar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-bar a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .dashboard-rh {
+      padding: 40px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .cartes-rh {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .carte {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .carte:hover {
+      transform: translateY(-5px);
+      background-color: #f0f8ff;
+    }
+
+    .carte span {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+      color: #003c74;
+    }
+  </style>
 </head>
 <body>
 
@@ -15,7 +79,6 @@
         <li><a href="formations.html">📚 Formations</a></li>
         <li><a href="salaries.html">👥 Salariés</a></li>
         <li><a href="plan-formation.html">🗓️ Plan</a></li>
-        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
         <li><a href="convocation.html">✉️ Convocation</a></li>
       </ul>
     </nav>
@@ -28,23 +91,15 @@
 
     <div class="cartes-rh">
       <a href="formations.html" class="carte">
-        <img src="icons/formations.svg" alt="Formations" />
         <span>📚 Formations</span>
       </a>
       <a href="salaries.html" class="carte">
-        <img src="icons/salaries.svg" alt="Salariés" />
         <span>👥 Salariés</span>
       </a>
       <a href="plan-formation.html" class="carte">
-        <img src="icons/plan.svg" alt="Plan" />
         <span>🗓️ Plan de formation</span>
       </a>
-      <a href="groupes.html" class="carte">
-        <img src="icons/groupes.svg" alt="Groupes" />
-        <span>👨‍👩‍👧‍👦 Groupes</span>
-      </a>
       <a href="convocation.html" class="carte">
-        <img src="icons/convocation.svg" alt="Convocation" />
         <span>✉️ Convocation</span>
       </a>
     </div>

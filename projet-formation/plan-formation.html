@@ -2,145 +2,261 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Plan de formation</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Plan de formation – Estimations & Réels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6fa;
+      padding: 40px;
+      color: #222;
+    }
+
+    .nav-bar ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 0;
+      margin-bottom: 30px;
+    }
+
+    .nav-bar a {
+      text-decoration: none;
+      color: #005ea2;
+      font-weight: 600;
+    }
+
+    h1 {
+      color: #003c74;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    thead {
+      background-color: #003f6b;
+      color: #ffffff;
+    }
+
+    th[colspan] {
+      background-color: #002e50;
+    }
+
+    .jaune {
+  background-color: #f0b700; /* Jaune plus profond */
+  color: #fff; /* Texte blanc */
+    }
+
+    .bleu {
+  background-color: #1d74c4; /* Bleu vif */
+  color: #fff; /* Texte blanc */
+    }
+
+
+    .gris {
+      background-color: #e6e6e6;
+      color: #222;
+    }
+
+    td {
+      color: #333;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      font-size: 13px;
+      color: #000;
+    }
+
+    input[readonly] {
+      color: #000;
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+
+    tfoot td {
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    button {
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+  </style>
 </head>
 <body>
 
   <header class="nav-bar">
     <nav>
       <ul>
-        <li><a href="index.html">🏠 Accueil</a></li>
-        <li><a href="formations.html">📚 Formations</a></li>
-        <li><a href="salaries.html">👥 Salariés</a></li>
-        <li><a href="plan-formation.html">🗓️ Plan</a></li>
-        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
-        <li><a href="convocation.html">✉️ Convocation</a></li>
+    <li><a href="index.html">🏠 Accueil</a></li>
+    <li><a href="formations.html">📚 Formations</a></li>
+    <li><a href="salaries.html">👥 Salariés</a></li>
+    <li><a href="plan-formation.html">🗓️ Plan</a></li>
+    <li><a href="convocation.html">✉️ Convocation</a></li>
+
       </ul>
     </nav>
   </header>
 
-  <section class="formulaire-section">
-    <h1>🗓️ Créer un plan de formation</h1>
-    <form class="formulaire" onsubmit="return false">
-      <label>Intitulé du plan</label>
-      <input type="text" placeholder="Ex : Plan 2025" required>
+  <h1>🗓️ Plan de formation – Estimations & Réels</h1>
 
-      <label>Objectifs du plan</label>
-      <textarea rows="3" placeholder="Ex : développement des compétences en bureautique..." required></textarea>
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2">Intitulé</th>
+        <th rowspan="2">Organisme</th>
+        <th rowspan="2">Date</th>
+        <th rowspan="2">Durée</th>
+        <th rowspan="2">Taux</th>
+        <th rowspan="2">Salariés</th>
+        <th rowspan="2">Financement</th>
+        <th colspan="5" class="jaune">Coût estimé</th>
+        <th rowspan="2">Répartition</th>
+        <th colspan="5" class="bleu">Coût réel</th>
+        <th rowspan="2" class="gris">Écart</th>
+        <th rowspan="2"></th>
+      </tr>
+      <tr>
+        <th class="jaune">Rémunération</th>
+        <th class="jaune">Repas</th>
+        <th class="jaune">Transport</th>
+        <th class="jaune">Pédagogie</th>
+        <th class="jaune">Budget</th>
+        <th class="bleu">Rémunération</th>
+        <th class="bleu">Repas</th>
+        <th class="bleu">Transport</th>
+        <th class="bleu">Pédagogie</th>
+        <th class="bleu">Budget</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+    <tfoot>
+      <tr><td colspan="3">Total durée :</td><td id="totalDuree">0</td><td colspan="15"></td></tr>
+      <tr><td colspan="12">Total CoFi :</td><td id="totalCoFi">0 €</td><td colspan="5"></td></tr>
+      <tr><td colspan="12">Total Plan :</td><td id="totalPlan">0 €</td><td colspan="5"></td></tr>
+      <tr><td colspan="12">Total budget estimé :</td><td id="totalBudget">0 €</td><td colspan="5"></td></tr>
+      <tr><td colspan="17">Total écart :</td><td id="totalEcart">0 €</td><td></td></tr>
+    </tfoot>
+  </table>
 
-      <h3>Formations prévues</h3>
-
-      <table class="table-formations">
-        <thead>
-          <tr>
-            <th>Intitulé</th>
-            <th>Formateur</th>
-            <th>Date</th>
-            <th>Durée</th>
-            <th>Budget (€)</th>
-            <th>Financement</th>
-            <th>Repas (€)</th>
-            <th>Transport (€)</th>
-            <th>Pédagogie (€)</th>
-            <th>Salariés</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <tr>
-            <td><input type="text" required></td>
-            <td><input type="text" required></td>
-            <td><input type="date" required></td>
-            <td><input type="text" required oninput="calculerTotal()"></td>
-            <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-            <td>
-              <select onchange="calculerTotal()">
-                <option>Plan</option>
-                <option>CPF</option>
-                <option>OPCO</option>
-                <option>Autre</option>
-              </select>
-            </td>
-            <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-            <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-            <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-            <td><input type="number" min="1" step="1"></td>
-            <td><button type="button" onclick="supprimerLigne(this)">❌</button></td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3"><strong>Total durée :</strong></td>
-            <td id="totalDuree">0 jours</td>
-            <td colspan="7" id="totalBudget">0 €</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <button type="button" onclick="ajouterLigne()">➕ Ajouter une ligne</button>
-      <br><br>
-      <button type="submit">💾 Enregistrer le plan</button>
-    </form>
-  </section>
+  <button onclick="ajouterLigne()">➕ Ajouter une ligne</button>
 
   <script>
     function ajouterLigne() {
-      const tbody = document.getElementById("tableBody");
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><input type="text" required></td>
-        <td><input type="text" required></td>
-        <td><input type="date" required></td>
-        <td><input type="text" required oninput="calculerTotal()"></td>
-        <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
+        <td><input type="text"></td>
+        <td><input type="text"></td>
+        <td><input type="date"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
         <td>
           <select onchange="calculerTotal()">
-            <option>Plan</option>
-            <option>CPF</option>
-            <option>OPCO</option>
-            <option>Autre</option>
+            <option value="Plan">Plan</option>
+            <option value="CoFi">CoFi</option>
           </select>
         </td>
-        <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-        <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-        <td><input type="number" min="0" step="0.01" oninput="calculerTotal()"></td>
-        <td><input type="number" min="1" step="1"></td>
-        <td><button type="button" onclick="supprimerLigne(this)">❌</button></td>
+        <td><input type="text" readonly></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="text" readonly></td>
+        <td><input type="text" readonly></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="number" oninput="calculerTotal()"></td>
+        <td><input type="text" readonly></td>
+        <td><input type="text" readonly></td>
+        <td><button onclick="this.closest('tr').remove(); calculerTotal()">❌</button></td>
       `;
-      tbody.appendChild(tr);
-    }
-
-    function supprimerLigne(button) {
-      const tr = button.closest("tr");
-      tr.remove();
-      calculerTotal();
+      document.getElementById("tableBody").appendChild(tr);
     }
 
     function calculerTotal() {
-      let totalDuree = 0;
-      let total = 0;
+      let totalDuree = 0, totalBudget = 0, totalCoFi = 0, totalPlan = 0, totalEcart = 0;
       const lignes = document.querySelectorAll("#tableBody tr");
 
       lignes.forEach(tr => {
-        const dureeVal = tr.cells[3]?.querySelector("input")?.value;
-        if (dureeVal) {
-          const match = dureeVal.match(/(\d+(?:[\.,]\d+)?)/);
-          if (match) totalDuree += parseFloat(match[1].replace(",", "."));
+        const val = idx => parseFloat(tr.cells[idx]?.querySelector("input")?.value || 0);
+        const financement = tr.cells[6]?.querySelector("select")?.value;
+
+        const duree = val(3), taux = val(4), nbsalaries = val(5);
+        const repasEst = val(8), transportEst = val(9), pedagogieEst = val(10);
+        const remuEst = duree * taux * nbsalaries;
+        const budgetEst = remuEst + repasEst + transportEst + pedagogieEst;
+        tr.cells[7].querySelector("input").value = remuEst.toFixed(2);
+        tr.cells[11].querySelector("input").value = budgetEst.toFixed(2);
+
+        let repText = "";
+        if (financement === "CoFi") {
+          const cofi = budgetEst * 0.7;
+          const plan = budgetEst * 0.3;
+          totalCoFi += cofi;
+          totalPlan += plan;
+          repText = `70 % CoFi (${cofi.toFixed(2)} €), 30 % Plan (${plan.toFixed(2)} €)`;
+        } else {
+                    totalPlan += budgetEst;
+          repText = `100 % Plan (${budgetEst.toFixed(2)} €)`;
         }
 
-        const b = v => parseFloat(tr.cells[v]?.querySelector("input")?.value.replace(",", ".") || 0);
-        const budget = b(4);
-        const repas = b(6);
-        const transport = b(7);
-        const pedagogie = b(8);
+        tr.cells[12].querySelector("input").value = repText;
 
-        total += budget + repas + transport + pedagogie;
+        const remuReel = val(13);
+        const repasReel = val(14);
+        const transportReel = val(15);
+        const pedagogieReel = val(16);
+        const budgetReel = remuReel + repasReel + transportReel + pedagogieReel;
+
+        tr.cells[17].querySelector("input").value = budgetReel.toFixed(2);
+
+        const ecart = budgetReel - budgetEst;
+        tr.cells[18].querySelector("input").value = ecart.toFixed(2);
+
+        totalDuree += duree;
+        totalBudget += budgetEst;
+        totalEcart += ecart;
       });
 
-      document.getElementById("totalDuree").textContent = totalDuree.toFixed(1) + " jours";
-      document.getElementById("totalBudget").textContent = total.toFixed(2) + " €";
+      document.getElementById("totalDuree").textContent = totalDuree.toFixed(1);
+      document.getElementById("totalBudget").textContent = totalBudget.toFixed(2) + " €";
+      document.getElementById("totalCoFi").textContent = totalCoFi.toFixed(2) + " €";
+      document.getElementById("totalPlan").textContent = totalPlan.toFixed(2) + " €";
+      document.getElementById("totalEcart").textContent = totalEcart.toFixed(2) + " €";
     }
+
+    // Démarrage automatique
+    ajouterLigne();
   </script>
 
 </body>

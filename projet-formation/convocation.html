@@ -3,7 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Convocation à une formation</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .nav-bar ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 15px;
+    }
+    .nav-bar li {
+      display: inline;
+    }
+    .nav-bar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .convocation, .frais {
+      border: 1px solid #ccc;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    input, select {
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 200px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -14,90 +51,114 @@
         <li><a href="formations.html">📚 Formations</a></li>
         <li><a href="salaries.html">👥 Salariés</a></li>
         <li><a href="plan-formation.html">🗓️ Plan</a></li>
-        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
         <li><a href="convocation.html">✉️ Convocation</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="formulaire-section">
-    <h1>✉️ Générer une lettre de convocation</h1>
+  <h1>✉️ Convocations et Feuilles de frais</h1>
 
-    <form class="formulaire" id="formConvocation" onsubmit="genererLettre(event)">
-      <label>Nom du salarié</label>
-      <input type="text" id="nom" required>
-
-      <label>Formation</label>
-      <input type="text" id="formation" required>
-
-      <label>Lieu</label>
-      <input type="text" id="lieu" required>
-
-      <label>Date</label>
-      <input type="date" id="date" required>
-
-      <label>Heure</label>
-      <input type="time" id="heure" required>
-
-      <label>Durée</label>
-      <input type="text" id="duree" placeholder="Ex : 1 journée" required>
-
-      <button type="submit">📄 Générer la lettre</button>
-    </form>
-
-    <div id="resultat" class="lettre-convocation" style="display:none; margin-top:2rem;"></div>
-  </section>
+  <div id="contenu"></div>
 
   <script>
-    function genererLettre(e) {
-      e.preventDefault();
-      const nom = document.getElementById('nom').value;
-      const formation = document.getElementById('formation').value;
-      const lieu = document.getElementById('lieu').value;
-      const date = new Date(document.getElementById('date').value).toLocaleDateString('fr-FR');
-      const heure = document.getElementById('heure').value;
-      const duree = document.getElementById('duree').value;
+  const data = JSON.parse(localStorage.getItem("convocationGroupe") || "{}");
 
-      const contenu = `
-        <p style="text-align:right;">À ${lieu}, le ${new Date().toLocaleDateString('fr-FR')}</p>
-        <p><strong>Objet :</strong> Convocation à une session de formation</p>
-        <p>Madame, Monsieur ${nom},</p>
+  if (!data.groupe || data.groupe.length === 0) {
+    document.getElementById("contenu").innerHTML = "<p>⚠️ Aucun groupe chargé depuis les modules de formation.</p>";
+  } else {
+    const container = document.getElementById("contenu");
 
-        <p>Nous avons le plaisir de vous convier à la formation suivante :</p>
+    data.groupe.forEach(nom => {
+      const identifiant = nom.replace(/\s/g, '_');
 
-        <ul>
-          <li><strong>Intitulé :</strong> ${formation}</li>
-          <li><strong>Date :</strong> ${date}</li>
-          <li><strong>Heure :</strong> ${heure}</li>
-          <li><strong>Lieu :</strong> ${lieu}</li>
-          <li><strong>Durée :</strong> ${duree}</li>
-        </ul>
-
-        <p>Votre présence est obligatoire. Merci de vous présenter à l’accueil 15 minutes avant le début de la session.</p>
-
-        <p>Nous restons à votre disposition pour toute question complémentaire.</p>
-
-        <p>Bien cordialement,</p>
-
-        <p><strong>Service Ressources Humaines</strong></p>
+      const convocationHTML = `
+        <div class="convocation">
+          <h2>✉️ Convocation – ${nom}</h2>
+          <p style="text-align:right;">À ${data.lieu}, le ${new Date().toLocaleDateString('fr-FR')}</p>
+          <p><strong>Objet :</strong> Convocation à une session de formation</p>
+          <p>Madame, Monsieur ${nom},</p>
+          <p>Nous avons le plaisir de vous convier à la formation suivante :</p>
+          <ul>
+            <li><strong>Intitulé :</strong> ${data.formation}</li>
+            <li><strong>Date :</strong> ${new Date(data.date).toLocaleDateString('fr-FR')}</li>
+            <li><strong>Heure :</strong> ${data.heure}</li>
+            <li><strong>Lieu :</strong> ${data.lieu}</li>
+            <li><strong>Durée :</strong> ${data.duree}</li>
+          </ul>
+          <p>Votre présence est obligatoire. Merci de vous présenter 15 minutes avant le début.</p>
+          <p>Cordialement,</p>
+          <p><strong>Service RH</strong></p>
+        </div>
       `;
 
-      const zone = document.getElementById('resultat');
-      zone.innerHTML = contenu;
-      zone.style.display = 'block';
-    }
-  </script>
+      const fraisHTML = `
+        <div class="frais" id="frais-${identifiant}">
+          <h2>🧾 Feuille de frais – ${nom}</h2>
+
+          <label>Type de véhicule :</label>
+          <select onchange="calculerTotal('${identifiant}')">
+            <option value="perso">Personnel (0,48 €/km)</option>
+            <option value="service">Service (0,20 €/km)</option>
+          </select>
+
+          <label>Distance aller-retour (km) :</label>
+          <input type="number" min="0" step="1" oninput="calculerTotal('${identifiant}')">
+
+          <label>Frais de repas (€) :</label>
+          <input type="number" min="0" step="0.01" oninput="calculerTotal('${identifiant}')">
+
+          <label>Frais d'hôtel (€) :</label>
+          <input type="number" min="0" step="0.01" oninput="calculerTotal('${identifiant}')">
+
+          <p><strong>Total :</strong> <span id="total-${identifiant}">0,00 €</span></p>
+
+          <button onclick="envoyerFrais('${identifiant}', '${nom}')">📤 Envoyer les frais</button>
+        </div>
+      `;
+
+      const div = document.createElement("div");
+      div.innerHTML = convocationHTML + fraisHTML;
+      container.appendChild(div);
+    });
+  }
+
+  function calculerTotal(id) {
+    const zone = document.getElementById("frais-" + id);
+    const inputs = zone.querySelectorAll("input");
+    const type = zone.querySelector("select").value;
+
+    const km = parseFloat(inputs[0].value || 0);
+    const repas = parseFloat(inputs[1].value || 0);
+    const hotel = parseFloat(inputs[2].value || 0);
+
+    const taux = (type === "perso") ? 0.48 : 0.20;
+    const kmFrais = km * taux;
+    const total = kmFrais + repas + hotel;
+
+    document.getElementById("total-" + id).textContent = total.toFixed(2) + " €";
+  }
+
+  function envoyerFrais(id, nom) {
+    const zone = document.getElementById("frais-" + id);
+    const values = zone.querySelectorAll("input");
+    const type = zone.querySelector("select").value;
+    const km = values[0].value;
+    const repas = values[1].value;
+    const hotel = values[2].value;
+    const total = document.getElementById("total-" + id).textContent;
+
+    const infos = `
+      ✉️ Feuille de frais pour ${nom}
+      - Véhicule : ${type}
+      - KM AR : ${km}
+      - Repas : ${repas} €
+      - Hôtel : ${hotel} €
+      - Total : ${total}
+    `;
+
+    alert("📨 À envoyer en paie :\n" + infos);
+  }
+</script>
 
 </body>
 </html>
-
-<script>
-window.onload = function () {
-  const data = JSON.parse(localStorage.getItem("formationActuelle") || "{}");
-  if (data.nom)      document.getElementById("formation").value = data.nom;
-  if (data.date)     document.getElementById("date").value = data.date;
-  if (data.heure)    document.getElementById("heure").value = data.heure;
-  if (data.lieu)     document.getElementById("lieu").value = data.lieu;
-  if (data.formateur)document.getElementById("formateur").value = data.formateur;
-};
-</script>

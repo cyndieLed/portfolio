@@ -2,8 +2,65 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Formations</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>liste des formations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .nav-bar ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 15px;
+    }
+    .nav-bar li {
+      display: inline;
+    }
+    .nav-bar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f5f5f5;
+    }
+    td input, td select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .dossier, .groupe {
+      display: none;
+      margin: 10px 0;
+      padding: 12px;
+      border: 1px solid #999;
+      background-color: #f9f9f9;
+    }
+    .open {
+      display: block;
+    }
+    .groupe ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .groupe li {
+      margin-bottom: 4px;
+    }
+    button {
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
 
@@ -14,59 +71,144 @@
         <li><a href="formations.html">📚 Formations</a></li>
         <li><a href="salaries.html">👥 Salariés</a></li>
         <li><a href="plan-formation.html">🗓️ Plan</a></li>
-        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
         <li><a href="convocation.html">✉️ Convocation</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="formulaire-section">
-    <h1>📚 Ajouter une formation</h1>
-    <form class="formulaire">
-      <label>Titre</label>
-      <input type="text" required>
+  <h1>📘 Liste des formations</h1>
 
-      <label>Formateur</label>
-      <input type="text" required>
+  <table>
+    <thead>
+      <tr>
+        <th>Intitulé</th>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Heures</th>
+        <th>Organisme</th>
+        <th>Lieu</th>
+        <th>📂 Dossier</th>
+        <th>👥 Groupe</th>
+        <th>✉️</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
 
-      <label>Durée</label>
-      <input type="text">
+  <button onclick="ajouterFormation()">➕ Ajouter une formation</button>
 
-      <label>Date</label>
-      <input type="date">
+  <div id="dossierZone"></div>
+  <div id="groupeZone"></div>
 
-      <label>Description</label>
-      <textarea rows="4"></textarea>
+  <script>
+    let compteurFormation = 0;
+    const listeSalaries = [
+      "Alice Martin", "Benjamin Dubois", "Chloé Lefèvre", "David Morel", "Émilie Caron"
+    ];
+    const participants = {};
 
-      <button type="submit">✅ Ajouter</button>
-    </form>
-  </section>
+    function ajouterFormation() {
+      const id = ++compteurFormation;
+      const tbody = document.getElementById("tableBody");
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input type="text" name="intitule-${id}" placeholder="Intitulé" required></td>
+        <td><input type="date" name="debut-${id}" required></td>
+        <td><input type="date" name="fin-${id}" required></td>
+        <td><input type="number" name="heures-${id}" min="0" step="0.5"></td>
+        <td><input type="text" name="organisme-${id}" placeholder="Organisme"></td>
+        <td><input type="text" name="lieu-${id}" placeholder="Lieu de formation"></td>
+        <td><button onclick="ouvrirDossier(${id})">📂</button></td>
+        <td><button onclick="ouvrirGroupe(${id})">👥</button></td>
+        <td><button onclick="envoyerVersConvocation(${id})">✉️</button></td>
+        <td><button onclick="supprimerFormation(${id}, this)">❌</button></td>
+      `;
+      tbody.appendChild(tr);
+
+      const dossier = document.createElement("div");
+      dossier.className = "dossier";
+      dossier.id = `dossier-${id}`;
+      dossier.innerHTML = `
+        <h4>📁 Dossier formation #${id}</h4>
+        <label>📎 Devis :</label><input type="file" accept=".pdf"><br><br>
+        <label>📘 Programme :</label><input type="file" accept=".pdf"><br><br>
+        <label>📝 Convention :</label><input type="file" accept=".pdf"><br><br>
+        <button onclick="fermerDossier(${id})">🔐 Fermer</button>
+      `;
+      document.getElementById("dossierZone").appendChild(dossier);
+
+      const groupe = document.createElement("div");
+      groupe.className = "groupe";
+      groupe.id = `groupe-${id}`;
+      let html = `<h4>👥 Groupe formation #${id}</h4><ul>`;
+      listeSalaries.forEach(nom => {
+        html += `
+          <li><label>
+            <input type="checkbox" onchange="mettreAJourGroupe(${id})" value="${nom}"> ${nom}
+          </label></li>`;
+      });
+      html += `</ul><div id="recap-${id}"></div><br><button onclick="fermerGroupe(${id})">🔐 Fermer</button>`;
+      groupe.innerHTML = html;
+      document.getElementById("groupeZone").appendChild(groupe);
+
+      participants[id] = [];
+    }
+
+    function envoyerVersConvocation(id) {
+      const ligne = document.querySelectorAll("#tableBody tr")[id - 1];
+      const intitule = ligne.cells[0].querySelector("input").value;
+      const date = ligne.cells[1].querySelector("input").value;
+      const lieu = ligne.cells[5].querySelector("input").value || "À définir";
+      const duree = ligne.cells[3].querySelector("input").value + "h";
+      const heure = "09:00";
+      const groupe = participants[id] || [];
+
+      if (groupe.length === 0) {
+        alert("Sélectionnez au moins un salarié pour générer une convocation.");
+        return;
+      }
+
+      const convocationData = { formation: intitule, date, heure, lieu, duree, groupe };
+      localStorage.setItem("convocationGroupe", JSON.stringify(convocationData));
+      window.location.href = "convocation.html";
+    }
+
+    function supprimerFormation(id, btn) {
+      btn.closest("tr").remove();
+      document.getElementById(`dossier-${id}`)?.remove();
+      document.getElementById(`groupe-${id}`)?.remove();
+      delete participants[id];
+    }
+
+    function ouvrirDossier(id) {
+      document.querySelectorAll(".dossier").forEach(d => d.classList.remove("open"));
+      document.getElementById(`dossier-${id}`).classList.add("open");
+    }
+
+    function fermerDossier(id) {
+      document.getElementById(`dossier-${id}`).classList.remove("open");
+    }
+
+    function ouvrirGroupe(id) {
+      document.querySelectorAll(".groupe").forEach(d => d.classList.remove("open"));
+      document.getElementById(`groupe-${id}`).classList.add("open");
+      mettreAJourGroupe(id);
+    }
+
+    function fermerGroupe(id) {
+      document.getElementById(`groupe-${id}`).classList.remove("open");
+    }
+
+    function mettreAJourGroupe(id) {
+      const checked = [...document.querySelectorAll(`#groupe-${id} input[type="checkbox"]:checked`)]
+                      .map(c => c.value);
+      participants[id] = checked;
+      document.getElementById(`recap-${id}`).textContent =
+        "✅ Participants : " + (checked.length > 0 ? checked.join(", ") : "Aucun");
+    }
+  </script>
 
 </body>
 </html>
-
-<section class="formulaire-section">
-  <h1>📚 Ajouter une formation</h1>
-  <form class="formulaire" onsubmit="return false">
-
-    <label>Titre</label>
-    <input type="text" required>
-
-    <label>Formateur</label>
-    <input type="text" required>
-
-    <label>Durée</label>
-    <input type="text" placeholder="Ex : 2 jours" required>
-
-    <label>Date</label>
-    <input type="date" required>
-
-    <label>Description</label>
-    <textarea rows="4"></textarea>
-
-    <label>Programme de formation (PDF)</label>
-    <input type="file" accept="application/pdf" id="programmePDF">
-
-    <button type="submit">✅ Ajouter</button>
-  </form>
-</section>

@@ -3,7 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <title>Salariés</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      padding: 20px;
+    }
+    .nav-bar ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 15px;
+    }
+    .nav-bar li {
+      display: inline;
+    }
+    .nav-bar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px;
+      text-align: left;
+    }
+    thead {
+      background-color: #f4f4f4;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
 
@@ -14,37 +47,74 @@
         <li><a href="formations.html">📚 Formations</a></li>
         <li><a href="salaries.html">👥 Salariés</a></li>
         <li><a href="plan-formation.html">🗓️ Plan</a></li>
-        <li><a href="groupes.html">👨‍👩‍👧‍👦 Groupes</a></li>
         <li><a href="convocation.html">✉️ Convocation</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="formulaire-section">
-    <h1>👥 Importer la liste des salariés</h1>
-    <input type="file" id="csvFile" accept=".csv" />
-    <button onclick="importerCSV()">📥 Importer</button>
-    <ul id="liste-salaries" class="liste-salaries"></ul>
-  </section>
+  <h1>👥 Importer la liste des salariés</h1>
+  <input type="file" id="csvFile" accept=".csv" />
+  <button onclick="importerCSV()">📥 Importer</button>
+
+  <table id="table-salaries">
+    <thead id="thead-salaries"></thead>
+    <tbody id="tbody-salaries"></tbody>
+  </table>
 
   <script>
+    let salariesUniques = new Set();
+
+    function formatEuro(valeur) {
+      const num = parseFloat(valeur.replace(',', '.').replace(/[^\d.]/g, ''));
+      if (isNaN(num)) return valeur;
+      return num.toLocaleString('fr-FR', {
+        style: 'currency',
+        currency: 'EUR'
+      });
+    }
+
     function importerCSV() {
       const fichier = document.getElementById('csvFile').files[0];
       if (!fichier) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const lignes = e.target.result.split('\n');
-        const liste = document.getElementById('liste-salaries');
-        liste.innerHTML = '';
-        lignes.forEach(ligne => {
-          if (ligne.trim()) {
-            const li = document.createElement('li');
-            li.textContent = ligne;
-            liste.appendChild(li);
-          }
-        });
-      };
-      reader.readAsText(fichier);
+
+      Papa.parse(fichier, {
+        header: true,
+        skipEmptyLines: true,
+        delimiter: ';',
+        complete: function(resultat) {
+          const data = resultat.data;
+          const thead = document.getElementById('thead-salaries');
+          const tbody = document.getElementById('tbody-salaries');
+
+          thead.innerHTML = '';
+          tbody.innerHTML = '';
+          if (data.length === 0) return;
+
+          const enTetes = Object.keys(data[0]);
+          thead.innerHTML = '<tr>' + enTetes.map(t => `<th>${t}</th>`).join('') + '</tr>';
+
+          data.forEach(ligne => {
+            const idUnique = Object.values(ligne).join('|');
+            if (!salariesUniques.has(idUnique)) {
+              salariesUniques.add(idUnique);
+              const tr = document.createElement('tr');
+              enTetes.forEach(cle => {
+                const td = document.createElement('td');
+                const valeur = ligne[cle]?.trim() || '';
+
+                if (cle.toLowerCase().includes("salaire") || cle.toLowerCase().includes("montant")) {
+                  td.textContent = formatEuro(valeur);
+                } else {
+                  td.textContent = valeur.replace(/^"|"$/g, '');
+                }
+
+                tr.appendChild(td);
+              });
+              tbody.appendChild(tr);
+            }
+          });
+        }
+      });
     }
   </script>
 
